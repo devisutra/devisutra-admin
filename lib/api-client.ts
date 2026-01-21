@@ -153,9 +153,26 @@ export const customersAPI = {
   
   getById: (id: string) => fetchWithAuth(`/api/admin/customers/${id}`),
   
-  updateStatus: (id: string, isActive: boolean) =>
+  create: (customerData: any) =>
+    fetchWithAuth('/api/admin/customers', {
+      method: 'POST',
+      body: JSON.stringify(customerData),
+    }),
+  
+  update: (id: string, customerData: any) =>
     fetchWithAuth(`/api/admin/customers/${id}`, {
       method: 'PUT',
+      body: JSON.stringify(customerData),
+    }),
+  
+  delete: (id: string) =>
+    fetchWithAuth(`/api/admin/customers/${id}`, {
+      method: 'DELETE',
+    }),
+  
+  updateStatus: (id: string, isActive: boolean) =>
+    fetchWithAuth(`/api/admin/customers/${id}/status`, {
+      method: 'PATCH',
       body: JSON.stringify({ isActive }),
     }),
 };
