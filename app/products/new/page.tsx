@@ -43,14 +43,21 @@ export default function AddProductPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/products", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      const token = localStorage.getItem('admin_token');
+      
+      const res = await fetch(`${API_URL}/api/admin/products`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          ...(token ? { "Authorization": `Bearer ${token}` } : {})
+        },
+        credentials: 'include',
         body: JSON.stringify({
           ...formData,
           price: Number(formData.price),
           stock: Number(formData.stock),
-          images: [formData.imageUrl], // Array format mein bhej rahe hain
+          images: [formData.imageUrl],
         }),
       });
 
