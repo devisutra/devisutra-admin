@@ -68,7 +68,7 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-3 border-2 border-brand-gold/30 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-brand-gold outline-none transition text-brand-text"
-                placeholder="admin@devisutra.com"
+                placeholder=""
                 disabled={loading}
               />
             </div>
@@ -87,7 +87,7 @@ export default function LoginPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full px-4 py-3 border-2 border-brand-gold/30 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-brand-gold outline-none transition text-brand-text"
-                placeholder="••••••••"
+                placeholder=""
                 disabled={loading}
               />
             </div>
