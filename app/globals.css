@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Devi Sutra Brand Palette */
+    --brand-brown: #4A2F1B;
+    --brand-gold: #C2A14D;
+    --brand-ivory: #F5F1EA;
+    --brand-text: #2D2420;
+  }
+  
+  body {
+    background-color: var(--brand-ivory);
+    color: var(--brand-text);
+  }
+}
+
+/* Custom Utilities */
+.text-brand-brown { color: var(--brand-brown); }
+.bg-brand-brown { background-color: var(--brand-brown); }
+.text-brand-gold { color: var(--brand-gold); }
+.border-brand-gold { border-color: var(--brand-gold); }
+
+/* Hide scrollbar for horizontal scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Sidebar Animations */
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile Bottom Navigation Spacing */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 64px; /* Space for bottom nav */
+  }
+  
+  /* Hide footer on all mobile screens */
+  footer {
+    display: none !important;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Aspect ratio utilities */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Toast & Loader Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progressBar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-progressBar {
+  animation: progressBar 0.5s ease-out;
+}
