@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { CldUploadWidget } from "next-cloudinary";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -42,8 +43,7 @@ export default function AddProductPage() {
     setLoading(true);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      const res = await fetch(`${API_URL}/api/admin/products`, {
+      const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -151,29 +151,46 @@ export default function AddProductPage() {
 
         {/* Image Upload Section */}
         <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-medium text-brand-brown mb-2">Product Image URL</label>
-          <input
-            name="imageUrl"
-            type="url"
-            placeholder="https://example.com/image.jpg"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            className="w-full border-2 border-brand-gold/30 p-2 rounded-lg focus:ring-2 focus:ring-brand-gold focus:border-brand-gold outline-none text-brand-text"
-          />
-          {formData.imageUrl && (
-            <div className="mt-4 relative w-full h-60 bg-gray-100 rounded-lg overflow-hidden">
-              <Image 
-                src={formData.imageUrl} 
-                alt="Product preview" 
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            </div>
-          )}
+          <label className="block text-sm font-medium text-brand-brown mb-2">Product Image</label>
+          
+          <CldUploadWidget 
+            uploadPreset="desidhaaga_preset" // Yahan Step 1 wala Preset name dalein
+            onSuccess={(result: any) => {
+              // Jab upload ho jaye, toh URL set karein
+              setFormData((prev) => ({ 
+                ...prev, 
+                imageUrl: result.info.secure_url 
+              }));
+            }}
+          >
+            {({ open }) => {
+              return (
+                <div 
+                  onClick={() => open()}
+                  className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 border-brand-gold p-10 flex flex-col justify-center items-center gap-4 text-brand-text bg-brand-ivory rounded-lg h-60"
+                >
+                  {formData.imageUrl ? (
+                    // Agar image upload ho gayi hai, toh preview dikhayein
+                    <div className="relative w-full h-full">
+                      <Image 
+                        src={formData.imageUrl} 
+                        alt="Product" 
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-contain rounded-lg"
+                      />
+                    </div>
+                  ) : (
+                    // Agar nahi hui hai, toh upload button dikhayein
+                    <>
+                      <ImageIcon size={40} className="text-brand-gold" />
+                      <div className="text-sm font-semibold text-brand-brown">Click to Upload Image</div>
+                    </>
+                  )}
+                </div>
+              );
+            }}
+          </CldUploadWidget>
         </div>
 
         <button
