@@ -116,7 +116,7 @@ export default function ProductsPage() {
           <p className="text-brand-text text-sm mt-1">Manage your product catalog</p>
         </div>
         <Link
-          href="/admin/products/new"
+          href="/products/new"
           className="bg-brand-brown text-brand-ivory px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-brand-gold hover:text-brand-brown transition text-white self-start md:self-auto"
         >
           <Plus size={20} /> Add Product

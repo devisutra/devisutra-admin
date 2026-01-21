@@ -55,7 +55,7 @@ export default function AddProductPage() {
       });
 
       if (res.ok) {
-        router.push("/admin/products"); // Success ke baad list page par wapas
+        router.push("/products"); // Success ke baad list page par wapas
         router.refresh();
       } else {
         alert("Something went wrong!");
@@ -70,7 +70,7 @@ export default function AddProductPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/admin/products" className="text-brand-text hover:text-brand-brown">
+        <Link href="/products" className="text-brand-text hover:text-brand-brown">
           <ArrowLeft size={24} />
         </Link>
         <h1 className="text-2xl font-bold text-brand-brown">Add New Item</h1>
