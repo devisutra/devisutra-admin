@@ -48,9 +48,10 @@ export default function CustomersPage() {
     try {
       // Use API client with authentication
       const { customersAPI } = await import('@/lib/api-client');
-      const data = await customersAPI.getAll();
-      setCustomers(data);
-      setFilteredCustomers(data);
+      const response: any = await customersAPI.getAll();
+      const data = response.data || response;
+      setCustomers(Array.isArray(data) ? data : []);
+      setFilteredCustomers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to load customers", error);
     } finally {
