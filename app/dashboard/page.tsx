@@ -52,7 +52,8 @@ export default function DashboardPage() {
     try {
       // Use API client with authentication
       const { dashboardAPI } = await import('@/lib/api-client');
-      const dashboardData = await dashboardAPI.getStats();
+      const response: any = await dashboardAPI.getStats();
+      const dashboardData = response.data || response;
       
       const orders = dashboardData.recentOrders || [];
       const products = dashboardData.products || [];
