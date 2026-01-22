@@ -8,6 +8,7 @@ import { ArrowLeft, Save, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
+import { productsAPI } from "@/lib/api-client";
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -43,32 +44,18 @@ export default function AddProductPage() {
     setLoading(true);
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const token = localStorage.getItem('admin_token');
-      
-      const res = await fetch(`${API_URL}/api/admin/products`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          ...(token ? { "Authorization": `Bearer ${token}` } : {})
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          ...formData,
-          price: Number(formData.price),
-          stock: Number(formData.stock),
-          images: [formData.imageUrl],
-        }),
+      await productsAPI.create({
+        ...formData,
+        price: Number(formData.price),
+        stock: Number(formData.stock),
+        images: [formData.imageUrl],
       });
 
-      if (res.ok) {
-        router.push("/products"); // Success ke baad list page par wapas
-        router.refresh();
-      } else {
-        alert("Something went wrong!");
-      }
-    } catch (error) {
+      router.push("/products");
+      router.refresh();
+    } catch (error: any) {
       console.error(error);
+      alert(error.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
