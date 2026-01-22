@@ -35,9 +35,10 @@ export default function AdminOrdersPage() {
       try {
         // Use API client with authentication
         const { ordersAPI } = await import('@/lib/api-client');
-        const data = await ordersAPI.getAll();
-        setOrders(data);
-        setFilteredOrders(data);
+        const response: any = await ordersAPI.getAll();
+        const data = response.data || response;
+        setOrders(Array.isArray(data) ? data : []);
+        setFilteredOrders(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Failed to load orders", error);
       } finally {
