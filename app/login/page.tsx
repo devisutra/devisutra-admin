@@ -1,16 +1,29 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useState, FormEvent, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  
+  // Show error messages from URL parameters
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'unauthorized') {
+      toast.error('Please login to access admin panel');
+    } else if (error === 'not_admin') {
+      toast.error('Access denied. Admin privileges required.');
+    } else if (error === 'invalid_session') {
+      toast.error('Your session has expired. Please login again.');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,11 +40,20 @@ export default function LoginPage() {
       const { adminAuthAPI } = await import('@/lib/api-client');
       const data = await adminAuthAPI.login(formData.email, formData.password);
       
-      toast.success("Login successful!");
+      // Verify that token and user are stored
+      const storedToken = localStorage.getItem('admin_token');
+      const storedUser = localStorage.getItem('admin_user');
+      
+      if (!storedToken || !storedUser) {
+        throw new Error('Failed to store authentication data');
+      }
+      
+      toast.success("Login successful! Redirecting...");
       
       // Redirect to dashboard
       setTimeout(() => {
         router.push('/dashboard');
+        router.refresh();
       }, 500);
     } catch (error: any) {
       console.error('Login error:', error);

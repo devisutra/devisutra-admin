@@ -64,12 +64,25 @@ export const adminAuthAPI = {
         throw new Error('Access denied. Admin privileges required.');
       }
       
-      if (data.token) {
+      if (!data.token) {
+        throw new Error('No authentication token received');
+      }
+      
+      // Store token and user data in localStorage
+      try {
         localStorage.setItem('admin_token', data.token);
         localStorage.setItem('admin_user', JSON.stringify(data.user));
+        console.log('Admin authentication stored successfully');
+      } catch (storageError) {
+        console.error('Failed to store authentication:', storageError);
+        throw new Error('Failed to save authentication data');
       }
+      
       return data;
     } catch (error: any) {
+      // Clear any partial authentication data
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_user');
       throw new Error(error.response?.data?.message || error.message || 'Login failed');
     }
   },

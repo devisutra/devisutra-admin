@@ -19,20 +19,35 @@ export default function RootLayout({
 
   // Check authentication status from localStorage
   useEffect(() => {
-    const token = localStorage.getItem('admin_token');
-    const user = localStorage.getItem('admin_user');
-    
-    if (!token || !user) {
-      if (pathname !== '/login') {
-        setIsAuthenticated(false);
-        setLoading(false);
-        router.push('/login?error=unauthorized');
-      } else {
-        setLoading(false);
-      }
-    } else {
+    const checkAuth = () => {
       try {
-        const userData = JSON.parse(user);
+        const token = localStorage.getItem('admin_token');
+        const userStr = localStorage.getItem('admin_user');
+        
+        // If on login page, just check if already authenticated
+        if (pathname === '/login') {
+          if (token && userStr) {
+            const userData = JSON.parse(userStr);
+            if (userData.isAdmin) {
+              // Already authenticated, redirect to dashboard
+              router.push('/dashboard');
+              return;
+            }
+          }
+          setLoading(false);
+          return;
+        }
+        
+        // For other pages, check authentication
+        if (!token || !userStr) {
+          setIsAuthenticated(false);
+          setLoading(false);
+          router.push('/login?error=unauthorized');
+          return;
+        }
+        
+        // Parse and validate user data
+        const userData = JSON.parse(userStr);
         if (!userData.isAdmin) {
           // Not an admin user
           localStorage.removeItem('admin_token');
@@ -40,19 +55,25 @@ export default function RootLayout({
           setIsAuthenticated(false);
           setLoading(false);
           router.push('/login?error=not_admin');
-        } else {
-          setIsAuthenticated(true);
-          setLoading(false);
+          return;
         }
+        
+        // Valid admin authentication
+        setIsAuthenticated(true);
+        setLoading(false);
       } catch (error) {
-        console.error('Invalid user data:', error);
+        console.error('Authentication check failed:', error);
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_user');
         setIsAuthenticated(false);
         setLoading(false);
-        router.push('/login?error=invalid_session');
+        if (pathname !== '/login') {
+          router.push('/login?error=invalid_session');
+        }
       }
-    }
+    };
+    
+    checkAuth();
   }, [router, pathname]);
 
   // Show loading state while checking authentication
