@@ -161,10 +161,31 @@ export const dashboardAPI = {
   getStats: () => axiosInstance.get('/api/admin/dashboard'),
 };
 
+// Reviews API
+export const reviewsAPI = {
+  getAll: async (params?: { page?: number; limit?: number; status?: string; productId?: string }) => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.status) queryParams.append('status', params.status);
+    if (params?.productId) queryParams.append('productId', params.productId);
+    
+    const query = queryParams.toString();
+    return axiosInstance.get(`/api/admin/reviews${query ? `?${query}` : ''}`);
+  },
+  
+  approve: (id: string) => axiosInstance.put(`/api/admin/reviews/${id}/approve`),
+  
+  reject: (id: string) => axiosInstance.put(`/api/admin/reviews/${id}/reject`),
+  
+  delete: (id: string) => axiosInstance.delete(`/api/admin/reviews/${id}`),
+};
+
 export default {
   auth: adminAuthAPI,
   dashboard: dashboardAPI,
   products: productsAPI,
   orders: ordersAPI,
   customers: customersAPI,
+  reviews: reviewsAPI,
 };

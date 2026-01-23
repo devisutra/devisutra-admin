@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Package, LayoutDashboard, ShoppingCart, Users, Menu, X, LogOut } from "lucide-react";
+import { Package, LayoutDashboard, ShoppingCart, Users, Menu, X, LogOut, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import "./globals.css";
@@ -94,6 +94,7 @@ export default function RootLayout({
     { href: "/products", icon: Package, label: "Products" },
     { href: "/orders", icon: ShoppingCart, label: "Orders" },
     { href: "/customers", icon: Users, label: "Customers" },
+    { href: "/reviews", icon: MessageSquare, label: "Reviews" },
   ];
 
   const handleLogout = () => {
