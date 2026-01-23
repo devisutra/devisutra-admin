@@ -48,9 +48,10 @@ export default function ProductsPage() {
     try {
       // Use API client with authentication
       const { productsAPI } = await import('@/lib/api-client');
-      const data = await productsAPI.getAll();
-      setProducts(data);
-      setFilteredProducts(data);
+      const response: any = await productsAPI.getAll();
+      const products = Array.isArray(response) ? response : response.data || [];
+      setProducts(products);
+      setFilteredProducts(products);
     } catch (error) {
       console.error("Failed to load products", error);
     } finally {

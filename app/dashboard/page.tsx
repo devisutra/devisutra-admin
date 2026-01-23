@@ -53,24 +53,22 @@ export default function DashboardPage() {
       // Use API client with authentication
       const { dashboardAPI } = await import('@/lib/api-client');
       const response: any = await dashboardAPI.getStats();
-      const dashboardData = response.data || response;
-      
-      const orders = dashboardData.recentOrders || [];
-      const products = dashboardData.products || [];
+      const dashboardData = response.data || response.stats || response;
+      const recentOrders = response.recentOrders || dashboardData.recentOrders || [];
 
       // Set stats directly from API response
       setStats({
-        totalSales: dashboardData.totalSales || 0,
+        totalSales: dashboardData.totalRevenue || dashboardData.totalSales || 0,
         todaySales: dashboardData.todaySales || 0,
         pendingOrders: dashboardData.pendingOrders || 0,
         processingOrders: dashboardData.processingOrders || 0,
         shippedOrders: dashboardData.shippedOrders || 0,
         deliveredOrders: dashboardData.deliveredOrders || 0,
-        activeProducts: dashboardData.activeProducts || 0,
+        activeProducts: dashboardData.totalProducts || dashboardData.activeProducts || 0,
         lowStockProducts: dashboardData.lowStockProducts || 0,
         totalCustomers: dashboardData.totalCustomers || 0,
         totalOrders: dashboardData.totalOrders || 0,
-        recentOrders: dashboardData.recentOrders || [],
+        recentOrders: recentOrders,
       });
     } catch (error) {
       console.error("Failed to fetch dashboard data", error);
